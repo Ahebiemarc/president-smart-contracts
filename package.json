@@ -1,6 +1,11 @@
 {
+  "scripts": {
+    "compile": "npx hardhat compile && node scripts/copy-artifacts.js", 
+    "copy-artifacts": "node scripts/copy-artifacts.js"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "fs-extra": "^11.2.0",
     "hardhat": "^2.22.3"
   },
   "dependencies": {

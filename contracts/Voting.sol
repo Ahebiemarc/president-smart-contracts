@@ -10,8 +10,9 @@ contract Voting is IVoting {
     }
 
     mapping(uint256 => Candidate) public candidates;
-    mapping(address => bool) public hasVoted;
-    mapping(string => bool) private uniqueCins; // Pour vérifier l'unicité des noms
+    mapping(string => bool) public hasVotedByID; //  Suivi des identifiants uniques des électeurs qui ont déjà voté
+    mapping(address => bool) public hasVoted; // Suivi des adresses Ethereum qui ont déjà voté
+    mapping(string => bool) private uniqueCins; // Pour vérifier l'unicité des cin candidat
     uint256 public candidateCount;
     bool public votingOpen;
 
@@ -25,25 +26,29 @@ contract Voting is IVoting {
         _;
     }
 
-    modifier onlyOnce() {
-        require(!hasVoted[msg.sender], "You have already voted");
+    modifier onlyOnce(string memory hashedElectorID) {
+        require(!hasVotedByID[hashedElectorID], "This ID has already voted"); // Vérifie que l'ID n'a pas voté
+        require(!hasVoted[msg.sender], "You have already voted"); // Vérifie que l'adresse n'a pas voté
         _;
-    }
+   }
 
     function addCandidate(string memory cin) public override onlyWhenVotingOpen {
         require(!uniqueCins[cin], "Candidate cin already exists"); // Vérification d'unicité
         candidateCount += 1;
         candidates[candidateCount] = Candidate(cin, 0);
-        uniqueCins[cin] = true; // Marque le nom comme utilisé
+        uniqueCins[cin] = true; // Marque le cin comme utilisé
         emit CandidateAdded(candidateCount, cin);
     }
 
-    function vote(uint256 candidateId) public override onlyWhenVotingOpen onlyOnce {
-        require(candidateId > 0 && candidateId <= candidateCount, "Invalid candidate");
-        candidates[candidateId].voteCount += 1;
-        hasVoted[msg.sender] = true;
-        emit Voted(msg.sender, candidateId);
-    }
+
+    function vote(uint256 candidateId, string memory hashedElectorID) public override onlyWhenVotingOpen onlyOnce(hashedElectorID) {
+       require(candidateId > 0 && candidateId <= candidateCount, "Invalid candidate");
+    
+       candidates[candidateId].voteCount += 1;
+       hasVotedByID[hashedElectorID] = true; // // Marque l'identifiant unique de l'électeur comme ayant voté
+       hasVoted[msg.sender] = true; // Marque l'adresse Ethereum comme ayant voté
+       emit Voted(msg.sender, candidateId); // Émettre l'événement de vote
+   }
 
     function closeVoting() public override onlyWhenVotingOpen {
         votingOpen = false;

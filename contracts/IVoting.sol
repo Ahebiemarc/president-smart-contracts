@@ -11,7 +11,7 @@ interface IVoting {
     function addCandidate(string memory cin) external;
 
     // Fonction pour voter pour un candidat spécifique
-    function vote(uint256 candidateId) external;
+    function vote(uint256 candidateId, string memory hashedElectorID) external;
 
     // Fonction pour fermer le scrutin
     function closeVoting() external;
