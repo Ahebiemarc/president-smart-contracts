@@ -26,9 +26,9 @@ contract Voting is IVoting {
         _;
     }
 
-    modifier onlyOnce(string memory hashedElectorID) {
+    modifier onlyOnce(string memory hashedElectorID, address voterAddress) {
         require(!hasVotedByID[hashedElectorID], "This ID has already voted"); // Vérifie que l'ID n'a pas voté
-        require(!hasVoted[msg.sender], "You have already voted"); // Vérifie que l'adresse n'a pas voté
+        require(!hasVoted[voterAddress], "You have already voted"); // Vérifie que l'adresse n'a pas voté
         _;
    }
 
@@ -41,7 +41,7 @@ contract Voting is IVoting {
     }
 
 
-    function vote(uint256 candidateId, string memory hashedElectorID) public override onlyWhenVotingOpen onlyOnce(hashedElectorID) {
+    function vote(uint256 candidateId, string memory hashedElectorID) public override onlyWhenVotingOpen onlyOnce(hashedElectorID, msg.sender) {
        require(candidateId > 0 && candidateId <= candidateCount, "Invalid candidate");
     
        candidates[candidateId].voteCount += 1;
@@ -85,5 +85,10 @@ contract Voting is IVoting {
 
     function isVotingOpen() public override view returns (bool) {
         return votingOpen;
+    }
+
+    // Implémentez une fonction pour récupérer le nombre total de candidats
+    function getCandidateCount() public override view returns (uint256) {
+        return candidateCount;
     }
 }

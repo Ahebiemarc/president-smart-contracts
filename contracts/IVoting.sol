@@ -27,4 +27,6 @@ interface IVoting {
 
     // Fonction pour obtenir le statut du vote
     function isVotingOpen() external view returns (bool);
+
+    function getCandidateCount() external view returns (uint256);
 }

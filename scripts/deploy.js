@@ -15,10 +15,9 @@ async function main(){
     //const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     //await delay(5000); // Attendre 5 secondes (ajustez si nécessaire)
 
-    // Afficher l'adresse du contrat
     // Obtenir l'adresse du contrat déployé
     const address = await voting.getAddress();
-console.log("Voting deployed to: ", address);
+    console.log("Voting deployed to: ", address);
 
 }
 

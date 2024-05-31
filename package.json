@@ -1,7 +1,9 @@
 {
   "scripts": {
     "compile": "npx hardhat compile && node scripts/copy-artifacts.js", 
-    "copy-artifacts": "node scripts/copy-artifacts.js"
+    "copy-artifacts": "node scripts/copy-artifacts.js",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "start": "npx hardhat node"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
